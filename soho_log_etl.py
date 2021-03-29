@@ -7,10 +7,13 @@ import shutil
 
 
 def setup():
+    # You know, I thought about creating a logger, but STDOUT is fine
     #log_directory = '/var/log/soho/'
     #log_file_filter = 'soho.log-\d+'
 
-    parser = argparse.ArgumentParser(description='Pass log file location and regex to determine which logs to load')
+    parser = argparse.ArgumentParser(
+        description='Pass log file location and regex to determine which logs to load'
+    )
     parser.add_argument(
         '-d',
         '--log_directory',
@@ -101,7 +104,7 @@ def db_sel_raw(cur, clause):
     sql_query = "SELECT * FROM url_log_raw WHERE source_file = %s"
     print(f"Selecting {sql_query} using {clause}")
     where_clause = (clause, )
-    print(where_clause)
+    print(f"  {where_clause}")
 
     try:
         cur.execute(sql_query, where_clause)
@@ -146,7 +149,6 @@ def main():
     complete_directory = log_directory + 'etl_complete/'
 
     # Get a list of all the files in /var/log/soho
-#    log_file_list = [f.name for f in os.scandir(log_directory) if f.is_file()]
     log_file_list = [f for f in os.listdir(log_directory) if re.match(match_regex, f)]
 
     if len(log_file_list) > 0:
@@ -189,7 +191,7 @@ def main():
                     print(row_ins_msg)
                     continue
 
-            # Show inserted records
+            # Show inserted records (early debugging)
             #(get_success, get_msg, inserted_records) = db_sel_raw(db_cur, this_log_file)
 
             # Count inserted records
